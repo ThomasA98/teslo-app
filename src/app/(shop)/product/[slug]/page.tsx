@@ -1,8 +1,11 @@
-import { ProductSlideShow, QuantitySelector, SizeSelector } from "@/components";
-import { ProductMobileSlideShow } from "@/components/product/slideshow/ProductMobileSlideShow";
-import { titleFont } from "@/config/fonts";
-import { initialData } from "@/seed/seed";
+export const revalidate = 604_800
+
 import { notFound } from "next/navigation";
+import { titleFont } from "@/config/fonts";
+import { ProductMobileSlideShow } from "@/components/product/slideshow/ProductMobileSlideShow";
+import { getProductBySlug } from "@/actions";
+import { ProductSlideShow, QuantitySelector, SizeSelector, StockLabel } from "@/components";
+import { Metadata, ResolvingMetadata } from "next";
 
 export interface Props {
   params: {
@@ -10,9 +13,27 @@ export interface Props {
   }
 }
 
-export default function ProductPage({ params }: Props) {
+export async function generateMetadata( { params }: Props, parent: ResolvingMetadata ): Promise<Metadata> {
 
-  const product = initialData.products.find(({ slug }) => slug === params.slug )
+  const slug = params.slug
+
+  const product = await getProductBySlug(slug)
+
+  return {
+    title: product?.title ?? 'Producto no encontrado',
+    description: product?.description ?? '',
+    openGraph: {
+      title: product?.title ?? 'Producto no encontrado',
+      description: product?.description ?? '',
+      images: [`/products/${ product?.images[1] }`]
+    }
+  }
+
+}
+
+export default async function ProductPage({ params }: Props) {
+
+  const product = await getProductBySlug(params.slug)
 
   if (!product) notFound()
 
@@ -27,6 +48,7 @@ export default function ProductPage({ params }: Props) {
       </div>
       {/* Details */}
       <div className="flex flex-col gap-3 col-span-1 p-3">
+        <StockLabel slug={ product.slug } />
         <h1 className={`${titleFont.className} antialiased font-bold text-xl`}>
           { product.title }
         </h1>
