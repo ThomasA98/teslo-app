@@ -1,4 +1,5 @@
 export interface Product {
+    id: string
     description: string;
     images: string[];
     inStock: number;
@@ -13,4 +14,4 @@ export interface Product {
 
 export type Gender = 'men'|'women'|'kid'|'unisex';
 export type Size = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL';
-export type Type = 'shirts'|'pants'|'hoodies'|'hats';
+export type Type = 'shirts'|'pants'|'hoodies'|'hats' | string;
