@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export const Footer = () => {
     return (
-        <div className="flex w-full justify-center text-sm gap-4 py-4 shadow shadow-slate-500 rounded-lg bg-white">
+        <footer className="flex w-full justify-center text-sm gap-4 py-4 shadow shadow-slate-500 rounded-lg bg-white">
 
             <Link
                 href={'/'}
@@ -27,6 +27,6 @@ export const Footer = () => {
                 Ubicaciones
             </Link>
 
-        </div>
+        </footer>
     )
 }

@@ -1,11 +1,11 @@
 export const revalidate = 604_800
 
+import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { titleFont } from "@/config/fonts";
-import { ProductMobileSlideShow } from "@/components/product/slideshow/ProductMobileSlideShow";
 import { getProductBySlug } from "@/actions";
-import { ProductSlideShow, QuantitySelector, SizeSelector, StockLabel } from "@/components";
-import { Metadata, ResolvingMetadata } from "next";
+import { ProductSlideShow, StockLabel, ProductMobileSlideShow } from "@/components";
+import { AddToCart } from "./ui/AddToCart";
 
 export interface Props {
   params: {
@@ -37,32 +37,35 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) notFound()
 
+    const { images, title, slug, id, price, description, sizes } = product
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       {/* SlideShow */}
       <div className="col-span-1 md:col-span-2">
         {/* mobile */}
-        <ProductMobileSlideShow images={ product.images } title={ product.title } className="md:hidden" />
+        <ProductMobileSlideShow images={ images } title={ title } className="md:hidden" />
         {/* descktop */}
-        <ProductSlideShow images={ product.images } title={ product.title } className="hidden md:block" />
+        <ProductSlideShow images={ images } title={ title } className="hidden md:block" />
       </div>
       {/* Details */}
       <div className="flex flex-col gap-3 col-span-1 p-3">
-        <StockLabel slug={ product.slug } />
+        <StockLabel slug={ slug } />
         <h1 className={`${titleFont.className} antialiased font-bold text-xl`}>
-          { product.title }
+          { title }
         </h1>
-        <p className="text-lg">${ product.price }</p>
+        <p className="text-lg">${ price }</p>
         {/* selector de tallas */}
-        <SizeSelector selectedSize="M" availableSizes={ product.sizes } />
-        {/* selector de cantidad */}
-        <QuantitySelector quantity={ 2 } />
-        <button className="btn-primary">
-          Agregar al carrito de compras
-        </button>
+        <AddToCart sizes={ sizes } product={{
+          id,
+          slug,
+          title,
+          price,
+          image: images[0],
+        }} />
         <h3 className="font-bold text-sm">Descripción</h3>
         <p className="font-light">
-          { product.description }
+          { description }
         </p>
       </div>
     </div>

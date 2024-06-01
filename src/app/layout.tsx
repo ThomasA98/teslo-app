@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={atkinson.className}>{children}</body>
+      <body className={`${atkinson.className} flex flex-col min-h-screen justify-between`}>{children}</body>
     </html>
   );
 }

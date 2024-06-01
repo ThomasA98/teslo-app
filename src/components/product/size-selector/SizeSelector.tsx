@@ -2,11 +2,12 @@ import { Size } from "@/interfaces"
 import clsx from "clsx"
 
 export interface SizeSelectorProps {
-    selectedSize: Size
+    selectedSize?: Size
     availableSizes: Size[]
+    onSizeChange: (size: Size) => void
 }
 
-export const SizeSelector: React.FC<SizeSelectorProps> = ({ availableSizes, selectedSize }) => {
+export const SizeSelector: React.FC<SizeSelectorProps> = ({ availableSizes, selectedSize, onSizeChange }) => {
   return (
     <div>
         <h3 className="font-bold">Tallas disponibles</h3>
@@ -15,6 +16,7 @@ export const SizeSelector: React.FC<SizeSelectorProps> = ({ availableSizes, sele
                 availableSizes.map(size => (
                     <button
                         key={ size }
+                        onClick={ () => onSizeChange(size) }
                         className={clsx(
                             'hover:underline text-lg',
                             {

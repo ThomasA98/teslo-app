@@ -29,7 +29,7 @@ export const StockLabel: React.FC<StockLabelProps> = ({ slug }) => {
 
   return (
     <>
-    <h1 className={clsx(
+    <h2 className={clsx(
         `${titleFont.className} antialiased font-bold text-xl rounded`,
         {
             'bg-gray-300 animate-pulse text-transparent': isLoading,
@@ -37,7 +37,7 @@ export const StockLabel: React.FC<StockLabelProps> = ({ slug }) => {
         }
     )}>
         Stock: { stock }
-    </h1>
+    </h2>
     </>
   )
 }
