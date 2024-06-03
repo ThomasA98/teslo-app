@@ -1,25 +1,33 @@
 'use client'
 import { IoCloseOutline, IoLogInOutline, IoLogOutOutline, IoPeopleOutline, IoPersonOutline, IoSearchOutline, IoShirtOutline, IoTicketOutline } from "react-icons/io5"
-import { SideBarLinkItem, SideBarLinkItemProps } from "./SideBarLinkItem"
-import { useUiStore } from "@/store"
 import clsx from "clsx"
+import { useUiStore } from "@/store"
+import { logout } from "@/actions"
+import { SideBarLinkItem, SideBarLinkItemProps } from "./SideBarLinkItem"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
 
 const linkItems: SideBarLinkItemProps[] = [
     {
-        href: '/',
+        href: '/profile',
         label: 'Perfil',
         icon: <IoPersonOutline size={ 25 } />,
     },{
         href: '/orders',
         label: 'Orders',
         icon: <IoTicketOutline size={ 25 } />,
-    },{
-        href: '/auth',
+    },
+]
+
+const authItems: SideBarLinkItemProps[] = [
+    {
+        href: '/auth/login',
         label: 'Ingresar',
         icon: <IoLogInOutline size={ 25 } />,
     },{
-        href: '/auth2',
+        href: '/',
         label: 'Salir',
+        onClick: logout,
         icon: <IoLogOutOutline size={ 25 } />,
     },
 ]
@@ -44,9 +52,18 @@ export const SideBar = () => {
 
     const isSideMenuOpen = useUiStore(state => state.isSideMenuOpen)
     const closeSideMenu = useUiStore(state => state.closeSideMenu)
+    const { data: session, status } = useSession()
+    const [ isAuthenticated, setIsAuthenticated ] = useState(status === 'authenticated')
+
+    useEffect(
+        () => {
+            setIsAuthenticated(status === 'authenticated')
+        },
+        [ session, status, isSideMenuOpen ]
+    )
 
   return (
-    <div className="">
+    <div>
 
         {
             isSideMenuOpen && (
@@ -91,12 +108,19 @@ export const SideBar = () => {
 
             <div className="flex flex-col gap-3">
                 {
-                    linkItems.map(item => (
+                    status === 'authenticated' && linkItems.map(item => (
                         <SideBarLinkItem
                             key={ item.href }
                             { ...item }
                         />
                     ))
+                }
+                {
+                    status !== 'loading' && (
+                        <SideBarLinkItem
+                            { ...authItems[+isAuthenticated] }
+                        />
+                    )
                 }
             </div>
 
@@ -104,7 +128,7 @@ export const SideBar = () => {
 
             <div className="flex flex-col gap-3">
                 {
-                    adminLinkItems.map(item => (
+                    session?.user.role === 'admin' && adminLinkItems.map(item => (
                         <SideBarLinkItem
                             key={ item.href }
                             { ...item }

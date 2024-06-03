@@ -8,6 +8,7 @@ async function main() {
     if (process.env.NODE_ENV === 'production') return
 
     await prisma.$transaction([
+        prisma.user.deleteMany(),
         prisma.productImage.deleteMany(),
         prisma.product.deleteMany(),
         prisma.category.deleteMany(),
@@ -18,6 +19,10 @@ async function main() {
     })
 
     const categoriesDB = await prisma.category.findMany()
+
+    await prisma.user.createMany({
+        data: initialData.users
+    })
 
     const categories = categoriesDB.reduce((acc, { id, name }) => ({
         ...acc,

@@ -8,7 +8,7 @@ export interface TitleProps {
 
 export const Title: React.FC<TitleProps> = ({ title, subtitle, className }) => {
   return (
-    <div className={ `flex flex-col gap-4 ${className} ` }>
+    <div className={ `flex flex-col gap-4 ${className}` }>
         <h1 className={ `${titleFont.className} antialiased text-4xl font-semibold` }>
             { title }
         </h1>
