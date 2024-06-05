@@ -1,5 +1,6 @@
 import { initialData } from "./seed";
 import prisma from '../lib/prisma'
+import { countries } from "./seed-countries";
 
 async function main() {
 
@@ -8,40 +9,54 @@ async function main() {
     if (process.env.NODE_ENV === 'production') return
 
     await prisma.$transaction([
+        prisma.country.deleteMany(),
         prisma.user.deleteMany(),
+        prisma.userAddress.deleteMany(),
         prisma.productImage.deleteMany(),
         prisma.product.deleteMany(),
         prisma.category.deleteMany(),
     ])
 
-    await prisma.category.createMany({
-        data: initialData.categories.map(category => ({ name: category }))
-    })
+    const [ , ,categoriesDB ] = await prisma.$transaction([
+        prisma.user.createMany({ data: initialData.users }),
+        prisma.country.createMany({ data: countries }),
+        prisma.category.createManyAndReturn({
+            data: initialData.categories.map(category => ({ name: category }))
+        })
+    ])
 
-    const categoriesDB = await prisma.category.findMany()
+    // const categoriesDB = await prisma.category.createManyAndReturn({
+    //     data: initialData.categories.map(category => ({ name: category }))
+    // })
 
-    await prisma.user.createMany({
-        data: initialData.users
-    })
+    // const categoriesDB = await prisma.category.findMany()
+
+    // await prisma.user.createMany({
+    //     data: initialData.users
+    // })
 
     const categories = categoriesDB.reduce((acc, { id, name }) => ({
         ...acc,
         [ name.toLowerCase() ]: id
     }), {} as Record<string, string>)
 
-    await prisma.product.createMany({
+    const productsDB = await prisma.product.createManyAndReturn({
         data: initialData.products.map(({ type, images, ...restProduct }) => ({
             ...restProduct,
             categoryId: categories[type],
-        }))
-    })
-
-    const productsDB = await prisma.product.findMany({
+        })),
         select: {
             id: true,
-            slug: true
+            slug: true,
         }
     })
+
+    // const productsDB = await prisma.product.findMany({
+    //     select: {
+    //         id: true,
+    //         slug: true
+    //     }
+    // })
 
     // { slug: id, ...{ slug: id } }
     const indexedProductsID = productsDB.reduce(
