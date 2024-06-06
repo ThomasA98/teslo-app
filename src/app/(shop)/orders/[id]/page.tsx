@@ -1,15 +1,10 @@
-import { Title } from "@/components";
-import { initialData } from "@/seed/seed";
-import clsx from "clsx";
 import Image from "next/image";
-import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
-
-const productsInCart = [
-  initialData.products[0],
-  initialData.products[1],
-  initialData.products[2],
-]
+import clsx from "clsx";
+import { getOrderById } from "@/actions";
+import { Title } from "@/components";
+import { currencyFormat } from "@/utils";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: {
@@ -17,11 +12,17 @@ interface Props {
   }
 }
 
-export default function OrderByIdPage({ params }: Props) {
+export default async function OrderByIdPage({ params }: Props) {
 
   const { id } = params
 
-  // todo: verificar
+  const { order, ok } = await getOrderById(id)
+
+  if (!ok) {
+    notFound()
+  }
+
+  const { OrderAddress, OrderItem, isPaid, subTotal, total, tax, itemsInOrder } = order!
 
   return (
     <div className="flex justify-center items-center px-10 sm:px-0">
@@ -35,20 +36,23 @@ export default function OrderByIdPage({ params }: Props) {
             <div className={clsx(
               'flex items-center rounded-lg text-xs font-bold text-white px-2 py-2 gap-2',
               {
-                'bg-green-700': true,
-                'bg-red-500': false,
+                'bg-green-700': isPaid,
+                'bg-red-500': !isPaid,
               }
             )}>
                 <IoCartOutline size={ 25 } />
-                <span>Pendiente de pago</span>
-                <span>Pagada</span>
+                {
+                  isPaid
+                  ? <span>Pagada</span>
+                  : <span>Pendiente de pago</span>
+                }
             </div>
             {
-              productsInCart.map(product => (
-                <div key={product.slug} className="flex gap-2">
+              OrderItem?.map(({ price, quantity, size, product: { productImages, title, slug } }) => (
+                <div key={`${ size }-${ slug }`} className="flex gap-2">
                   <Image
-                    src={`/products/${ product.images[0] }`}
-                    alt={ product.title }
+                    src={`/products/${ productImages[0].url }`}
+                    alt={ title }
                     width={ 100 }
                     height={ 100 }
                     style={{
@@ -58,9 +62,9 @@ export default function OrderByIdPage({ params }: Props) {
                     className="rounded"
                   />
                   <div>
-                    <p>{ product.title }</p>
-                    <p>${ product.price } x { 3 }</p>
-                    <p className="font-bold">Subtotal: ${ product.price * 3 }</p>
+                    <p>{ title }</p>
+                    <p>${ price } x { quantity }</p>
+                    <p className="font-bold">Subtotal: ${ price * quantity }</p>
                   </div>
                 </div>
               ))
@@ -70,13 +74,12 @@ export default function OrderByIdPage({ params }: Props) {
           <div className="flex flex-col gap-4 bg-white rounded-xl shadow-xl p-8">
             <h2 className="text-2xl">Direccion de entrega</h2>
             <div className="flex flex-col gap-2">
-              <p className="text-xl">Thomas Andres</p>
-              <p>Av. Siempre viva 123</p>
-              <p>Col. Centro</p>
-              <p>Alcaldía Cuauhtémoc</p>
-              <p>Ciudad de Mexico</p>
-              <p>CP 123123</p>
-              <p>123.123.123</p>
+              <p className="text-xl capitalize">{ OrderAddress?.firstName } { OrderAddress?.lastName }</p>
+              <p className="capitalize">{ OrderAddress?.address }</p>
+              <p className="capitalize">{ OrderAddress?.address2 }</p>
+              <p className="capitalize">{ OrderAddress?.postalCode }</p>
+              <p className="capitalize">{ OrderAddress?.city }, { OrderAddress?.country.name }</p>
+              <p className="capitalize">{ OrderAddress?.phone }</p>
             </div>
 
             <hr />
@@ -84,27 +87,30 @@ export default function OrderByIdPage({ params }: Props) {
             <h2 className="text-2xl">Resumen de orden</h2>
             <div className="grid grid-cols-2 gap-2 pt-2">
               <span>No. Productos</span>
-              <span className="text-right">{ 3 } articulos</span>
+              <span className="text-right">{ itemsInOrder } articulos</span>
               <span>Subtotal</span>
-              <span className="text-right">${ 100 }</span>
+              <span className="text-right">{ currencyFormat(subTotal!) }</span>
               <span>Impuestos (15%)</span>
-              <span className="text-right">${ 15 }</span>
+              <span className="text-right">{ currencyFormat(tax!) }</span>
               <hr />
               <hr />
               <span className="text-2xl">Total</span>
-              <span className="text-2xl text-right">${ 115 }</span>
+              <span className="text-2xl text-right">{ currencyFormat(total!) }</span>
             </div>
             <div className="flex flex-col gap-2">
               <div className={clsx(
                 'flex items-center rounded-lg text-xs font-bold text-white px-2 py-2 gap-2',
                 {
-                  'bg-green-700': true,
-                  'bg-red-500': false,
+                  'bg-green-700': isPaid,
+                  'bg-red-500': !isPaid,
                 }
               )}>
-                  <IoCartOutline size={ 25 } />
-                  <span>Pendiente de pago</span>
-                  <span>Pagada</span>
+                <IoCartOutline size={ 25 } />
+                {
+                  isPaid
+                  ? <span>Pagada</span>
+                  : <span>Pendiente de pago</span>
+                }
               </div>
             </div>
           </div>

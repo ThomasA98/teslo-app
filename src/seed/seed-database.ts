@@ -9,9 +9,12 @@ async function main() {
     if (process.env.NODE_ENV === 'production') return
 
     await prisma.$transaction([
+        prisma.orderAddress.deleteMany(),
+        prisma.orderItem.deleteMany(),
+        prisma.order.deleteMany(),
+        prisma.userAddress.deleteMany(),
         prisma.country.deleteMany(),
         prisma.user.deleteMany(),
-        prisma.userAddress.deleteMany(),
         prisma.productImage.deleteMany(),
         prisma.product.deleteMany(),
         prisma.category.deleteMany(),

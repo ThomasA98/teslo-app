@@ -1,12 +1,12 @@
 'use client'
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import clsx from "clsx"
+import { useAddressStore } from "@/store"
 import { removeUserAddress, setUserAddress } from "@/actions"
 import { Address, Country } from "@/interfaces"
-import { useAddressStore } from "@/store"
-import clsx from "clsx"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
 
 interface FormInputs {
     firstName: string
@@ -41,6 +41,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({ countries, userStoredA
     })
 
     const onSubmit: SubmitHandler<FormInputs> = async ({ rememberAddress, ...data }) => {
+        console.log(data)
         setAddress(data)
 
         if (rememberAddress) await setUserAddress({

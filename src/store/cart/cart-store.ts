@@ -9,6 +9,7 @@ export interface UseCartState {
     getTotalItems: () => number
     getSummaryInformation: () => { totalProducts: number, subtotal: number, taxes: number, total: number }
     removeProductToCart: (product: CartProduct) => void
+    clearCart: () => void
 }
 
 export const useCartStore = create<UseCartState>()(
@@ -54,6 +55,9 @@ export const useCartStore = create<UseCartState>()(
                     }
                 )
             },
+            clearCart: () => {
+                set({ cart: {} })
+            }
         }), {
             name: 'shopping-cart'
         }
