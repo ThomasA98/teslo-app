@@ -51,7 +51,7 @@ export const authConfig: NextAuthConfig = {
             return session
         },
         authorized({ auth, request: { nextUrl } }) {
-            console.log({ auth })
+            // console.log({ auth })
             // const isLoggedIn = !!auth?.user
             // const isOnDashboard = nextUrl.pathname.startsWith('')
             // if (isOnDashboard) {

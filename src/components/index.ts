@@ -1,3 +1,4 @@
+export * from './paypal/PayPalButton';
 export * from './product/quantity-selector/QuantitySelector';
 export * from './product/size-selector/SizeSelector';
 export * from './product/slideshow/ProductMobileSlideShow';
@@ -6,7 +7,7 @@ export * from './product/stock-label/StockLabel';
 export * from './products/product-grid/ProductGrid';
 export * from './products/product-grid/ProductGridItem';
 export * from './products/product-grid/ProductGridItemImage';
-export * from './provider/Provider';
+export * from './providers/Providers';
 export * from './ui/error/ErrorPage';
 export * from './ui/footer/Footer';
 export * from './ui/not-found/PageNotFound';

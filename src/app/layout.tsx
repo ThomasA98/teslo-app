@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { atkinson } from "@/config/fonts";
 import "./globals.css";
-import { Provider } from "@/components";
+import { Providers } from "@/components";
 
 export const metadata: Metadata = {
   title: {
@@ -19,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${atkinson.className} flex flex-col min-h-screen justify-between`}>
-        <Provider>
+        <Providers>
           {children}
-        </Provider>
+        </Providers>
       </body>
     </html>
   );
