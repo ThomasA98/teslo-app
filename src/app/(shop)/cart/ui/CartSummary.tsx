@@ -8,8 +8,8 @@ import { currencyFormat } from "@/utils"
 export const CartSummary = () => {
 
     const { subtotal, taxes, total, totalProducts } = useCartStore(store => store.getSummaryInformation())
-    if (totalProducts < 1) location.href = '/empty';
     const [ loaded, setLoaded ] = useState(false)
+    // if (totalProducts < 1) window.location.replace('/empty');
 
     useEffect(
         () => {

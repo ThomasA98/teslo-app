@@ -27,22 +27,25 @@ const authItems: SideBarLinkItemProps[] = [
     },{
         href: '/',
         label: 'Salir',
-        onClick: logout,
+        onClick: async () => {
+            await logout()
+            window.location.replace('/')
+        },
         icon: <IoLogOutOutline size={ 25 } />,
     },
 ]
 
 const adminLinkItems: SideBarLinkItemProps[] = [
     {
-        href: '/products',
+        href: '/admin/products',
         label: 'Products',
         icon: <IoShirtOutline size={ 25 } />,
     },{
-        href: '/admin',
+        href: '/admin/orders',
         label: 'Ordenes',
         icon: <IoTicketOutline size={ 25 } />,
     },{
-        href: '/users',
+        href: '/admin/users',
         label: 'Usuarios',
         icon: <IoPeopleOutline size={ 25 } />,
     },

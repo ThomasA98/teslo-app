@@ -1,8 +1,9 @@
+'use server'
 import { Title } from "@/components";
 import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
 
-export default function EmptyCartPage() {
+export default async function EmptyCartPage() {
   return (
     <div className="flex flex-col sm:flex-row justify-center items-center h-[50vh] px-10 sm:px-0 gap-4">
 
