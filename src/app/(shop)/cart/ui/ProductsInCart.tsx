@@ -1,10 +1,9 @@
 'use client'
 
-import { QuantitySelector } from "@/components"
-import { useCartStore } from "@/store"
-import Image from "next/image"
-import Link from "next/link"
 import { useEffect, useState } from "react"
+import Link from "next/link"
+import { useCartStore } from "@/store"
+import { ProductImage, QuantitySelector } from "@/components"
 
 export const ProductsInCart = () => {
 
@@ -24,8 +23,8 @@ export const ProductsInCart = () => {
     <>{
         loaded && Object.entries(productsInCart).map(([key, product]) => (
           <div key={key} className="flex gap-2">
-            <Image
-              src={`/products/${ product.image }`}
+            <ProductImage
+              src={ product.image }
               alt={ product.title }
               width={ 100 }
               height={ 100 }

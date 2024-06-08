@@ -1,6 +1,6 @@
 export const revalidate = 0
 // https://tailwindcomponents.com/component/hoverable-table
-import { Pagination, Title } from '@/components';
+import { Pagination, ProductImage, Title } from '@/components';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -62,14 +62,14 @@ export default async function ProductsPage({ searchParams }: Props) {
 
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <Link
-                      href={ `/products/${ product.slug }` }
+                      href={ `/product/${ product.slug }` }
                     >
-                    <Image
-                      src={ `/products/${ product.images[0] }` }
-                      alt={ product.title }
-                      width={ 80 }
-                      height={ 80 }
-                      className="w-20 h-20 object-cover rounded"
+                      <ProductImage
+                        src={ product.images[0] }
+                        alt={ product.title }
+                        width={ 80 }
+                        height={ 80 }
+                        className="w-20 h-20 object-cover rounded"
                       />
                     </Link>
                   </td>

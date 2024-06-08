@@ -10,6 +10,7 @@ import 'swiper/css/thumbs';
 
 import './styles.css'
 import Image from 'next/image';
+import { ProductImage } from '../product-image/ProductImage';
 
 export interface ProductMobileSlideShowProps {
     images: string[]
@@ -35,8 +36,8 @@ export const ProductMobileSlideShow: React.FC<ProductMobileSlideShowProps> = ({ 
         {
             images.map(image => (
                 <SwiperSlide key={ image }>
-                    <Image
-                        src={ `/products/${ image }` }
+                    <ProductImage
+                        src={ image }
                         alt={ title }
                         className='object-fill'
                         width={ 600 }

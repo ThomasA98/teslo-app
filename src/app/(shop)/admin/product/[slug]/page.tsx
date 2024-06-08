@@ -18,12 +18,12 @@ export default async function ProductPage({ params }: Props) {
         getCategories(),
     ])
 
-    if (!product || !ok) redirect('/admin/products')
+    if (!product && slug !== 'new' || !ok) redirect('/admin/products')
 
   return (
     <>
-      <Title title={ product?.title } />
-      <ProductForm product={ product } categories={ categories ?? [] } />
+      <Title title={ product?.title ?? 'New product' } />
+      <ProductForm product={ product ?? {} } categories={ categories ?? [] } />
     </>
   );
 }
